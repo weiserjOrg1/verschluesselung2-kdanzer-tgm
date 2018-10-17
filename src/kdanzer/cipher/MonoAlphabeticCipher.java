@@ -1,23 +1,26 @@
 package kdanzer.cipher;
 
-public class MonoAlphabeticCipher implements Cipher{
-	private String alphabet; 
-	private String secretAlphabet;
+public class MonoAlphabeticCipher implements Cipher {
+	//Attribute
+	public static final String alphabet = "abcdefghijklmnopqrstuvwxyzäöüß"; //String to save the alphabet how it normally lookes
+	private String secretAlphabet; //String to save the secrete alphabet
 	
+	//Konstruktor
 	public MonoAlphabeticCipher() {
-		System.setProperty("file.encoding", "UTF-8");
-		this.alphabet = "abcdefghijklmnopqrstuvwxyzäöüß";
+		System.setProperty("file.encoding", "UTF-8"); //Set all to UTF-8
 	}
 	
 	
 	public String getSecretAlphabet() {
+		//Returns the secrete Alphabet
 		return secretAlphabet;
 	}
 	
-	public void setSecretAlphabet(String secretAlphabet) throws Exception {
+	protected void setSecretAlphabet(String secretAlphabet) throws Exception {
+		//Sets the secrete Alphabet only allowed for Methodes in the same Package if an unallowed thing happens it throws an Exception
 		if (secretAlphabet.length() == 30) {
 			for (int i = 0; i < 30; i++) {
-				if (secretAlphabet.contains("" + this.alphabet.charAt(i)) == false) {
+				if (secretAlphabet.contains("" + MonoAlphabeticCipher.alphabet.charAt(i)) == false) {
 					
 					throw new Exception("secretAlphabet.missingLetterException");
 				}
@@ -32,12 +35,13 @@ public class MonoAlphabeticCipher implements Cipher{
 
 	@Override
 	public String encrypt(String klartext) {
+		//Encrypts the clear text to a secret text and returns it
 		StringBuilder ausgabe = new StringBuilder();
 		klartext = klartext.toLowerCase();
 	
 		
 		for(int i = 0; i < klartext.length(); i++) {
-			int index = this.alphabet.indexOf(klartext.charAt(i));
+			int index = MonoAlphabeticCipher.alphabet.indexOf(klartext.charAt(i));
 			if (index == -1) 
 				ausgabe.append(klartext.charAt(i));
 			else
@@ -50,6 +54,7 @@ public class MonoAlphabeticCipher implements Cipher{
 
 	@Override
 	public String decrypt(String geheimtext) {
+		//Dencrypts the secret text to a clear text and returns it
 		StringBuilder ausgabe = new StringBuilder();
 		geheimtext = geheimtext.toLowerCase();
 		
@@ -58,7 +63,7 @@ public class MonoAlphabeticCipher implements Cipher{
 			if (index == -1) 
 				ausgabe.append(geheimtext.charAt(i));
 			else
-			ausgabe.append(this.alphabet.charAt(index));
+			ausgabe.append(MonoAlphabeticCipher.alphabet.charAt(index));
 		}
 		
 		return ausgabe.toString();

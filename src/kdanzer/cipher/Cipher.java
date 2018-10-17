@@ -1,7 +1,8 @@
 package kdanzer.cipher;
 
 public interface Cipher {
-	/**Interface welches die Methoden encrypt und decrypt vorgibt
+	/**Interface which showes how the Methodes encrypt and decrpyt has
+	 * to be
 	 * 
 	 * @author Kalian Danzer
 	 * @version 1.0
