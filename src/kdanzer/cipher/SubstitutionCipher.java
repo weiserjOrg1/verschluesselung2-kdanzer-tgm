@@ -3,13 +3,13 @@ package kdanzer.cipher;
 public class SubstitutionCipher extends MonoAlphabeticCipher {
 	
 	//Konstrukor
-	public SubstitutionCipher(String secretAlphabet) throws Exception{
+	public SubstitutionCipher(String secretAlphabet) {
 		super.setSecretAlphabet(secretAlphabet);
 	}
+	public SubstitutionCipher() {
+	}
 	
-	//Methoden
-	
-	public void setSecretAlphabet(String secretAlphabet) throws Exception { //Sets the secret alphabet
-		super.setSecretAlphabet(secretAlphabet);
+	public boolean setSecretAlphabet(String secretAlphabet) {
+		return super.setSecretAlphabet(secretAlphabet);
 	}
 }

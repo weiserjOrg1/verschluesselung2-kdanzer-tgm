@@ -3,7 +3,6 @@ package kdanzer.cipher;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -20,15 +19,10 @@ import javax.swing.JTextArea;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditListener;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
 import javax.swing.text.PlainDocument;
-import javax.swing.text.Position;
-import javax.swing.text.Segment;
 
 public class View extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -38,8 +32,14 @@ public class View extends JFrame {
 	 * 
 	 * @author Kalian Danzer
 	 */
+	public static final int SUBSTITUTION = 0;
+	public static final int SHIFT = 1;
+	public static final int ANDERES = 2;
+	
 	//Attribute
 	private Controller c1;
+	@SuppressWarnings("unused")
+	private Model m1;
 	
 	private JButton verschGo, entschGo, copyButton, alphabetButton; //start the Cipher
 	private JComboBox<String> comboBox; //Combobox to choose the Cipher
@@ -48,14 +48,16 @@ public class View extends JFrame {
 														secretAlphabet where u enter the secrete Alphabet*/
 	private JScrollPane scrollPane1, scrollPane2;
 	private JPanel panel1, panel2, panel3; //to make the Layout
-	private JLabel label1, label2; //to be able to name some sections on the Panel;
+	private JLabel label1; //to be able to name some sections on the Panel;
 	private Border border1, border2;
 	private JSpinner shiftValueSpinner; //Where you rotate the secrete alphabet of shiftCipher
+	private int activeCipher;
 	
 	//Konstruktor
-	public View(Controller c) {
+	public View(Model m, Controller c) {
 		/*Initaliesing of all Parameters*/
 		this.c1 = c;
+		this.m1 = m;
 		this.addComponentListener(this.c1);
 		
 
@@ -80,6 +82,7 @@ public class View extends JFrame {
 		this.init();
 		this.sizeAll();
 		
+		this.activateSubstitution();
 		this.setVisible(true);
 	}
 	
@@ -166,6 +169,8 @@ public class View extends JFrame {
 		this.secretAlphabet.setFont(new Font("", Font.PLAIN, 15));
 		this.secretAlphabet.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 		this.secretAlphabet.setDocument(new PlainDocument() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void insertString(int offs, String str, AttributeSet a) 
 		            throws BadLocationException {
@@ -177,17 +182,32 @@ public class View extends JFrame {
 			        	Toolkit.getDefaultToolkit().beep();
 			        }
 				}
+				if (secretAlphabet.getText().length() < 30) {
+					alphabetButton.setEnabled(false);
+				} else {
+					alphabetButton.setEnabled(true);
+				}
 		    }
+			@Override
+			protected void removeUpdate(AbstractDocument.DefaultDocumentEvent chng) {
+				if (secretAlphabet.getText().length() <= 30) {
+					alphabetButton.setEnabled(false);
+				} else {
+					alphabetButton.setEnabled(true);
+				}
+			}
 		});
 		this.panel3.add(this.secretAlphabet);
 		
 		this.alphabetButton = new JButton("Set Alphabet");
 		this.alphabetButton.setFocusPainted(false);
 		this.alphabetButton.setBorder(new LineBorder(Color.GRAY));
+		this.alphabetButton.addActionListener(this.c1);
 		this.alphabetButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent source) {
-				alphabetButton.setBorder(BorderFactory.createEtchedBorder(0, Color.BLACK, Color.WHITE));
+				if (alphabetButton.isEnabled())
+					alphabetButton.setBorder(BorderFactory.createEtchedBorder(0, Color.BLACK, Color.WHITE));
 			}
 			@Override
 			public void mouseExited(MouseEvent source) {
@@ -233,4 +253,82 @@ public class View extends JFrame {
 	}
 	
 	//Methoden
+	public String getEnterdText() {
+		return this.text.getText();
+	}
+	
+	public String getExitedText() {
+		return this.ausgabe.getText();
+	}
+	
+	public void setExitedText(String versch) {
+		this.ausgabe.setText(versch);
+	}
+	
+
+	public String getSecretAlphabet() {
+		return this.secretAlphabet.getText();
+	}
+
+	
+	public int getComboBoxIndex() {
+		return this.comboBox.getSelectedIndex();
+	}
+
+	public int getSpinnerValue() {
+		return (int) this.shiftValueSpinner.getValue();
+	}
+	
+	public int getActiveCipher() {
+		return this.activeCipher;
+	}
+	
+	public void activateShift() {
+		this.shiftValueSpinner.setEnabled(true);
+		this.secretAlphabet.setEnabled(false);
+		this.alphabetButton.setEnabled(false);
+		this.activeCipher = View.SHIFT;
+	}
+	
+	public void activateSubstitution() {
+		this.shiftValueSpinner.setEnabled(false);
+		this.secretAlphabet.setEnabled(true);
+		this.alphabetButton.setEnabled(true);
+		this.activeCipher = View.SUBSTITUTION;
+		if (secretAlphabet.getText().length() < 30) this.alphabetButton.setEnabled(false);
+	}
+	
+	
+	public boolean isComboBox(Object o) {
+		if (this.comboBox == o) return true;
+		return false;
+	}
+	
+	public boolean isVerschButton(Object o) {
+		if (this.verschGo == o) return true;
+		return false;
+	}
+	
+	public boolean isEntschButton(Object o) {
+		if (this.entschGo == o) return true;
+		return false;
+	}
+	
+	public boolean isCopyButton(Object o) {
+		if (this.copyButton == o) return true;
+		return false;
+	}
+	
+	public boolean isSetAlphButton(Object o) {
+		if (this.alphabetButton == o) return true;
+		return false;
+	}
+	
+	public boolean isSpinner(Object o) {
+		if (this.shiftValueSpinner == o) return true;
+		return false;
+	}
+
+	
+
 }

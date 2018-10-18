@@ -16,19 +16,19 @@ public class MonoAlphabeticCipher implements Cipher {
 		return secretAlphabet;
 	}
 	
-	protected void setSecretAlphabet(String secretAlphabet) throws Exception {
+	protected boolean setSecretAlphabet(String secretAlphabet) {
 		//Sets the secrete Alphabet only allowed for Methodes in the same Package if an unallowed thing happens it throws an Exception
 		if (secretAlphabet.length() == 30) {
 			for (int i = 0; i < 30; i++) {
 				if (secretAlphabet.contains("" + MonoAlphabeticCipher.alphabet.charAt(i)) == false) {
-					
-					throw new Exception("secretAlphabet.missingLetterException");
+					return false;
 				}
 			}
 			this.secretAlphabet = secretAlphabet;
 		} else {
-			throw new Exception("secretAlphabet.wrongRangeException");
+			return false;
 		}
+		return true;
 		
 	}
 
@@ -39,7 +39,6 @@ public class MonoAlphabeticCipher implements Cipher {
 		StringBuilder ausgabe = new StringBuilder();
 		klartext = klartext.toLowerCase();
 	
-		
 		for(int i = 0; i < klartext.length(); i++) {
 			int index = MonoAlphabeticCipher.alphabet.indexOf(klartext.charAt(i));
 			if (index == -1) 
