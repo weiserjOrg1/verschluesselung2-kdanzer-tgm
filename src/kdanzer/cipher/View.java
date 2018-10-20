@@ -32,10 +32,7 @@ public class View extends JFrame {
 	 * 
 	 * @author Kalian Danzer
 	 */
-	public static final int SUBSTITUTION = 0;
-	public static final int SHIFT = 1;
-	public static final int ANDERES = 2;
-	
+
 	//Attribute
 	private Controller c1;
 	@SuppressWarnings("unused")
@@ -51,7 +48,6 @@ public class View extends JFrame {
 	private JLabel label1; //to be able to name some sections on the Panel;
 	private Border border1, border2;
 	private JSpinner shiftValueSpinner; //Where you rotate the secrete alphabet of shiftCipher
-	private int activeCipher;
 	
 	//Konstruktor
 	public View(Model m, Controller c) {
@@ -279,22 +275,22 @@ public class View extends JFrame {
 		return (int) this.shiftValueSpinner.getValue();
 	}
 	
-	public int getActiveCipher() {
-		return this.activeCipher;
-	}
 	
 	public void activateShift() {
 		this.shiftValueSpinner.setEnabled(true);
 		this.secretAlphabet.setEnabled(false);
 		this.alphabetButton.setEnabled(false);
-		this.activeCipher = View.SHIFT;
+
+		this.m1.monoC = this.m1.shiftC;
 	}
 	
 	public void activateSubstitution() {
 		this.shiftValueSpinner.setEnabled(false);
 		this.secretAlphabet.setEnabled(true);
 		this.alphabetButton.setEnabled(true);
-		this.activeCipher = View.SUBSTITUTION;
+		
+		this.m1.monoC = this.m1.subC;
+		
 		if (secretAlphabet.getText().length() < 30) this.alphabetButton.setEnabled(false);
 	}
 	

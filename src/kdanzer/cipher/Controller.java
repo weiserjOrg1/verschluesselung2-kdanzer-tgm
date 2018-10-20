@@ -39,25 +39,15 @@ public class Controller implements ActionListener, ChangeListener, ComponentList
 			}
 		}
 		if (this.v1.isVerschButton(ev.getSource())) {
-			if (View.SUBSTITUTION == this.v1.getActiveCipher()) {
-				String versch = this.m1.subc.encrypt(this.v1.getEnterdText());
-				this.v1.setExitedText(versch);
-			} else if (View.SHIFT == this.v1.getActiveCipher()) {
-				String versch = this.m1.shiftC.encrypt(this.v1.getEnterdText());
-				this.v1.setExitedText(versch);
-			}
+			String versch = this.m1.monoC.encrypt(this.v1.getEnterdText());
+			this.v1.setExitedText(versch);
 		}
 		if (this.v1.isEntschButton(ev.getSource())) {
-			if (View.SUBSTITUTION == this.v1.getActiveCipher()) {
-				String versch = this.m1.subc.decrypt(this.v1.getEnterdText());
-				this.v1.setExitedText(versch);
-			} else if (View.SHIFT == this.v1.getActiveCipher()) {
-				String versch = this.m1.shiftC.decrypt(this.v1.getEnterdText());
-				this.v1.setExitedText(versch);
-			}
+			String versch = this.m1.monoC.decrypt(this.v1.getEnterdText());
+			this.v1.setExitedText(versch);
 		}
 		if (this.v1.isSetAlphButton(ev.getSource())) {
-			this.m1.subc.setSecretAlphabet(this.v1.getSecretAlphabet());
+			this.m1.subC.setSecretAlphabet(this.v1.getSecretAlphabet());
 		}
 		if (this.v1.isCopyButton(ev.getSource())) {
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(this.v1.getExitedText()), null);
